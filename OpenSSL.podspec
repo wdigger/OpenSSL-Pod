@@ -1,23 +1,22 @@
 Pod::Spec.new do |s|
   s.name            = "OpenSSL"
-  s.version         = "1.0.205"
+  s.version         = "1.1.106"
   s.summary         = "OpenSSL is an SSL/TLS and Crypto toolkit. Deprecated in Mac OS and gone in iOS, this spec gives your project non-deprecated OpenSSL support."
   s.author          = "OpenSSL Project <openssl-dev@openssl.org>"
 
   s.homepage        = "https://github.com/FredericJacobs/OpenSSL-Pod"
   s.license         = 'BSD-style Open Source'
-  s.source          = { :http => "https://openssl.org/source/openssl-1.0.2e.tar.gz", :sha1 => "2c5691496761cb18f98476eefa4d35c835448fb6"}
+  s.source          = { :http => "https://www.openssl.org/source/openssl-1.1.1f.tar.gz", :sha1 => "238e001ea1fbf19ede43e36209c37c1a636bb51f"}
   s.source_files    = "opensslIncludes/openssl/*.h"
   s.header_dir      = "openssl"
   s.license	        = { :type => 'OpenSSL (OpenSSL/SSLeay)', :file => 'LICENSE' }
 
   s.prepare_command = <<-CMD
-    VERSION="1.0.2e"
+    VERSION="1.0.1i"
     SDKVERSION=`xcrun --sdk iphoneos --show-sdk-version 2> /dev/null`
-    MIN_SDK_VERSION_FLAG="-miphoneos-version-min=7.0"
 
     BASEPATH="${PWD}"
-    CURRENTPATH="/tmp/openssl"
+    CURRENTPATH="${TMPDIR}/openssl"
     ARCHS="i386 x86_64 armv7 armv7s arm64"
     DEVELOPER=`xcode-select -print-path`
 
@@ -45,13 +44,13 @@ Pod::Spec.new do |s|
         PLATFORM="iPhoneOS"
       fi
 
-      export CROSS_TOP="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer"
+      export CROSS_TOP="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer -fembed-bitcode"
       export CROSS_SDK="${PLATFORM}${SDKVERSION}.sdk"
 
       echo "Building openssl-${VERSION} for ${PLATFORM} ${SDKVERSION} ${ARCH}"
       echo "Please stand by..."
 
-      export CC="${DEVELOPER}/usr/bin/gcc -arch ${ARCH} ${MIN_SDK_VERSION_FLAG}"
+      export CC="${DEVELOPER}/usr/bin/gcc -arch ${ARCH} -miphoneos-version-min=${SDKVERSION}"
       mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
       LOG="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk/build-openssl-${VERSION}.log"
 
