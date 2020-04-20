@@ -1,23 +1,23 @@
 Pod::Spec.new do |s|
-  s.name            = "OpenSSL"
-  s.version         = "1.1.106"
-  s.summary         = "OpenSSL is an SSL/TLS and Crypto toolkit. Deprecated in Mac OS and gone in iOS, this spec gives your project non-deprecated OpenSSL support."
-  s.author          = "OpenSSL Project <openssl-dev@openssl.org>"
+  s.name            = 'OpenSSL'
+  s.version         = '1.1.106'
+  s.summary         = 'OpenSSL is an SSL/TLS and Crypto toolkit. Deprecated in Mac OS and gone in iOS, this spec gives your project non-deprecated OpenSSL support.'
+  s.author          = 'OpenSSL Project <openssl-dev@openssl.org>'
 
-  s.homepage        = "https://github.com/FredericJacobs/OpenSSL-Pod"
+  s.homepage        = 'https://github.com/wdigger/OpenSSL-Pod'
   s.license         = 'BSD-style Open Source'
-  s.source          = { :http => "https://www.openssl.org/source/openssl-1.1.1f.tar.gz", :sha1 => "238e001ea1fbf19ede43e36209c37c1a636bb51f"}
-  s.source_files    = "opensslIncludes/openssl/*.h"
-  s.header_dir      = "openssl"
-  s.license	        = { :type => 'OpenSSL (OpenSSL/SSLeay)', :file => 'LICENSE' }
+  s.source          = { :http => 'https://www.openssl.org/source/old/1.1.1/openssl-1.1.1f.tar.gz', :sha1 => '238e001ea1fbf19ede43e36209c37c1a636bb51f'}
+  s.source_files    = 'opensslIncludes/openssl/*.h'
+  s.header_dir      = 'openssl'
+  s.license         = { :type => 'OpenSSL (OpenSSL/SSLeay)', :file => 'LICENSE' }
 
   s.prepare_command = <<-CMD
-    VERSION="1.0.1i"
+    VERSION="1.0.1f"
     SDKVERSION=`xcrun --sdk iphoneos --show-sdk-version 2> /dev/null`
 
     BASEPATH="${PWD}"
     CURRENTPATH="${TMPDIR}/openssl"
-    ARCHS="i386 x86_64 armv7 armv7s arm64"
+    ARCHS="x86_64 armv7 armv7s arm64"
     DEVELOPER=`xcode-select -print-path`
 
     mkdir -p "${CURRENTPATH}"
@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
 
     cp "file.tgz" "${CURRENTPATH}/file.tgz"
     cd "${CURRENTPATH}"
+    ls -la
     tar -xzf file.tgz
     cd "openssl-${VERSION}"
 
@@ -85,11 +86,12 @@ Pod::Spec.new do |s|
     echo "Done."
   CMD
 
-  s.ios.platform            = :ios
-  s.ios.public_header_files = "opensslIncludes/openssl/*.h"
-  s.ios.vendored_libraries  = "lib/libcrypto.a", "lib/libssl.a"
+  s.ios.deployment_target   = '12.0'
+  s.osx.deployment_target   = '10.14'
 
-  s.libraries             = 'crypto', 'ssl'
-  s.requires_arc          = false
+  s.public_header_files = 'opensslIncludes/openssl/*.h'
+  s.vendored_libraries  = 'lib/libcrypto.a', 'lib/libssl.a'
+  s.libraries               = 'crypto', 'ssl'
+  s.requires_arc            = true
 
 end
